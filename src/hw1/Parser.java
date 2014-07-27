@@ -1,9 +1,6 @@
 package hw1;
 
-import hw1.Abstraction;
-import hw1.Expression;
-
-import java.util.ArrayList;
+import java.util.*;
 
 public class Parser {
     String s;
@@ -13,6 +10,7 @@ public class Parser {
         this.s = s;
         cur = null;
     }
+
     public Expression parse() {
         return parseAbstraction(0, s.length());
     }
@@ -21,33 +19,45 @@ public class Parser {
         if (s.charAt(begin) == '\\') {
             int i = begin + 1;
             StringBuilder sb = new StringBuilder("");
-            while(s.charAt(i) != '.') {
+            while (s.charAt(i) != '.') {
                 sb.append(s.charAt(i));
                 ++i;
             }
             return new Abstraction(new Variable(sb.toString()), parseAbstraction(i + 1, end));
         }
-        return parseTerm(begin, end);
+        return parseUsage(begin, end);
     }
 
-    private Expression parseTerm(int begin, int end) {
+    private Expression parseUsage(int begin, int end) {
         int index = begin;
-        ArrayList<Expression> terms = new ArrayList<Expression>();
-        while(index != end) {
+        Deque<Expression> expressions = new ArrayDeque<Expression>();
+        while (index < end) {
             if (s.charAt(index) == '(') {
-                int i = index;
-                while (s.charAt(i) != ')') ++i;
-                terms.add(parseAbstraction(begin + 1, i));
+                int balance = 1;
+                int i = index + 1;
+                while (balance != 0) {
+                    if (s.charAt(i) == '(') ++balance;
+                    else if (s.charAt(i) == ')') --balance;
+                    ++i;
+                }
+                expressions.add(parseAbstraction(index + 1, i));
                 index = i + 1;
+                if (index < end && s.charAt(index) == ' ') index++;
                 continue;
             }
             StringBuilder sb = new StringBuilder();
-            while(index != end && s.charAt(index) != '(') {
+            while (index < end && (Character.isAlphabetic(s.charAt(index)) ||
+                    Character.isDigit(s.charAt(index)) || s.charAt(index) == '`')) {
                 sb.append(s.charAt(index++));
             }
-            terms.add(new Variable(sb.toString()));
+            expressions.add(new Variable(sb.toString()));
+            if (index < end && (s.charAt(index) == ' ' || s.charAt(index) == ')')) index++;
         }
-        return new Usage(terms);
+        while(expressions.size() > 1) {
+            Expression left = expressions.pollFirst();
+            Expression right = expressions.pollFirst();
+            expressions.addFirst(new Term(left, right));
+        }
+        return expressions.poll();
     }
-
 }

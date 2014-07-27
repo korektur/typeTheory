@@ -28,6 +28,6 @@ public class Abstraction implements Expression {
 
     @Override
     public String toString() {
-        return "\\" + var + ".(" + expr + ")";
+        return "\\" + var + "." + expr + "";
     }
 }

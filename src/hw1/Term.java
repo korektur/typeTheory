@@ -1,15 +1,13 @@
 package hw1;
 
-public class Term implements Expression {
+public class Term implements Expression{
 
-    private Expression expr;
+    private Expression left;
+    private Expression right;
 
-    public Term(Expression expr) {
-        this.expr = expr;
-    }
-
-    public Expression getExpr() {
-        return expr;
+    public Term(Expression left, Expression right) {
+        this.left = left;
+        this.right = right;
     }
 
     @Override
@@ -17,13 +15,22 @@ public class Term implements Expression {
         if (!(o instanceof Term))
             return false;
         Term other = (Term)o;
-        return expr.equals(other.getExpr());
+        return other.left.equals(left) && other.right.equals(right);
     }
 
     @Override
     public String toString() {
-        if (expr instanceof Variable)
-            return expr.toString();
-        return "(" + expr + ")";
+        StringBuilder sb = new StringBuilder("(");
+        if (left instanceof Abstraction)
+            sb.append('(').append(left).append(')');
+        else
+            sb.append(left);
+        sb.append(' ');
+        if (right instanceof Abstraction)
+            sb.append('(').append(right).append(')');
+        else
+            sb.append(right);
+        sb.append(')');
+        return sb.toString();
     }
 }
