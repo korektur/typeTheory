@@ -30,7 +30,7 @@ public class Parser {
 
     private Expression parseUsage(int begin, int end) {
         int index = begin;
-        Deque<Expression> expressions = new ArrayDeque<Expression>();
+        Deque<Expression> expressions = new ArrayDeque<>();
         while (index < end) {
             if (s.charAt(index) == '(') {
                 int balance = 1;
@@ -56,7 +56,7 @@ public class Parser {
         while(expressions.size() > 1) {
             Expression left = expressions.pollFirst();
             Expression right = expressions.pollFirst();
-            expressions.addFirst(new Term(left, right));
+            expressions.addFirst(new Usage(left, right));
         }
         return expressions.poll();
     }

@@ -1,20 +1,20 @@
 package hw1;
 
-public class Term implements Expression{
+public class Usage implements Expression{
 
     private Expression left;
     private Expression right;
 
-    public Term(Expression left, Expression right) {
+    public Usage(Expression left, Expression right) {
         this.left = left;
         this.right = right;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Term))
+        if (!(o instanceof Usage))
             return false;
-        Term other = (Term)o;
+        Usage other = (Usage)o;
         return other.left.equals(left) && other.right.equals(right);
     }
 
