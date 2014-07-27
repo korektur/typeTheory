@@ -10,6 +10,14 @@ public class Usage implements Expression{
         this.right = right;
     }
 
+    public Expression getLeft() {
+        return left;
+    }
+
+    public Expression getRight() {
+        return right;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Usage))

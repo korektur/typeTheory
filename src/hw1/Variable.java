@@ -1,6 +1,6 @@
 package hw1;
 
-public class Variable implements Expression {
+public class Variable implements Expression, Comparable {
 
     private String name;
 
@@ -19,6 +19,11 @@ public class Variable implements Expression {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return toString().compareTo(o.toString());
     }
 
 }
