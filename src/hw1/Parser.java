@@ -47,7 +47,7 @@ public class Parser {
             }
             StringBuilder sb = new StringBuilder();
             while (index < end && (Character.isAlphabetic(s.charAt(index)) ||
-                    Character.isDigit(s.charAt(index)) || s.charAt(index) == '`')) {
+                    Character.isDigit(s.charAt(index)) || s.charAt(index) == '\'')) {
                 sb.append(s.charAt(index++));
             }
             expressions.add(new Variable(sb.toString()));
