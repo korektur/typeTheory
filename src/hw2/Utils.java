@@ -26,7 +26,7 @@ public class Utils {
             tmp.addAll(getFreeVariables_(usage.getLeft(), chained));
             tmp.addAll(getFreeVariables_(usage.getRight(), chained));
             tmp.stream().filter(v -> !res.contains(v)).forEach(res::add);
-        } else {
+        } else if (expr instanceof Variable) {
             Variable variable = (Variable) expr;
             if (!chained.contains(variable))
                 res.add(variable);
