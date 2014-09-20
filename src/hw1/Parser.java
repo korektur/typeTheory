@@ -4,16 +4,17 @@ import java.util.*;
 
 public class Parser {
     String s;
-    Expression cur;
 
     public Parser(String s) {
+        s = s.replaceAll("[[\\s]]", " ");
         this.s = s;
-        cur = null;
     }
 
     public Expression parse() {
         return parseAbstraction(0, s.length());
     }
+
+
 
     private Expression parseAbstraction(int begin, int end) {
         if (s.charAt(begin) == '\\') {
@@ -45,12 +46,27 @@ public class Parser {
                 if (index < end && s.charAt(index) == ' ') index++;
                 continue;
             }
-            StringBuilder sb = new StringBuilder();
-            while (index < end && (Character.isAlphabetic(s.charAt(index)) ||
+            if (index < end && (Character.isAlphabetic(s.charAt(index)) ||
                     Character.isDigit(s.charAt(index)) || s.charAt(index) == '\'')) {
-                sb.append(s.charAt(index++));
+                StringBuilder sb = new StringBuilder();
+                while (index < end && (Character.isAlphabetic(s.charAt(index)) ||
+                        Character.isDigit(s.charAt(index)) || s.charAt(index) == '\'')) {
+                    sb.append(s.charAt(index++));
+                }
+                expressions.add(new Variable(sb.toString()));
+                continue;
             }
-            expressions.add(new Variable(sb.toString()));
+            if (index < end && s.charAt(index) == '\\') {
+                int balance = 1;
+                int i = index + 1;
+                while(i < end && balance != 0) {
+                    if (s.charAt(i) == '(') ++ balance;
+                    else if (s.charAt(i) == ')') --balance;
+                    ++i;
+                }
+                expressions.add(parseAbstraction(index, i));
+                index = i + 1;
+            }
             if (index < end && (s.charAt(index) == ' ' || s.charAt(index) == ')')) index++;
         }
         while(expressions.size() > 1) {
